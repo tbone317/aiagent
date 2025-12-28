@@ -4,10 +4,10 @@ from dotenv import load_dotenv
 from google import genai
 import argparse
 from google.genai import types
+from prompts import system_prompt
 
 def main():
     load_dotenv()
-    print("Hello from aiagent!")
 
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
@@ -23,7 +23,10 @@ def main():
 
     response = client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=messages,)
+        contents=messages,
+        config=types.GenerateContentConfig(system_instruction=system_prompt,
+                                           ),
+        )
     
     if response.usage_metadata:
         if args.verbose:
